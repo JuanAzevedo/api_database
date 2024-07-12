@@ -12,11 +12,13 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+# Endpoint para obter a lista de eventos
 @app.route('/eventos', methods=['GET'])
 def get_eventos():
     eventos = Evento.query.all()
     return jsonify([evento.serialize() for evento in eventos]), 200
 
+# Endpoint para obter um evento específico pelo ID
 @app.route('/evento/<int:id>', methods=['GET'])
 def get_evento(id):
     evento = Evento.query.get(id)
@@ -24,6 +26,7 @@ def get_evento(id):
         return jsonify({"message": "Evento não encontrado"}), 404
     return jsonify(evento.serialize()), 200
 
+# Endpoint para criar um novo evento
 @app.route('/eventos', methods=['POST'])
 def criar_evento():
     data = request.get_json()
@@ -36,6 +39,7 @@ def criar_evento():
     db.session.commit()
     return jsonify(evento.serialize()), 201
 
+# Endpoint para atualizar um evento existente
 @app.route('/eventos/<int:id>', methods=['PUT'])
 def atualizar_evento(id):
     data = request.get_json()
@@ -49,6 +53,7 @@ def atualizar_evento(id):
     db.session.commit()
     return jsonify(evento.serialize()), 200
 
+# Endpoint para deletar um evento
 @app.route('/eventos/<int:id>', methods=['DELETE'])
 def deletar_evento(id):
     evento = Evento.query.get(id)
